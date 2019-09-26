@@ -135,10 +135,10 @@ function header(text) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.init = init;
-exports.destroy = destroy;
-exports.default = tabs;
 exports.demoTabs = demoTabs;
+exports.default = createTabs;
+exports.destroyTabs = destroyTabs;
+exports.init = init;
 
 function switchTabs() {
   var currentTab = this.dataset.tab,
@@ -151,24 +151,20 @@ function switchTabs() {
   tabsContainer.querySelector(".tab-panel-".concat(currentTab)).classList.add("active");
 }
 
-function init() {
-  var tabs = document.querySelectorAll(".tab-control");
-  var tabsArray = Array.from(tabs);
-  tabsArray.map(function (tab) {
-    tab.addEventListener("click", switchTabs);
-  });
+function demoTabs() {
+  return [{
+    tabname: "Demo tab 1",
+    tabtext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+  }, {
+    tabname: "Potoo tab 2",
+    tabtext: "Potoo ipsum dolor sit amet, consectetur adipiscing elit."
+  }, {
+    tabname: "Puppy tab 3",
+    tabtext: "Puppy ipsum dolor sit amet, consectetur adipiscing elit."
+  }];
 }
 
-function destroy(tabObject) {
-  var tabs = tabObject.querySelectorAll(".tab-control");
-  var tabsArray = Array.from(tabs);
-  tabsArray.map(function (tab) {
-    tab.removeEventListener("click", switchTabs());
-  });
-  tabObject.remove;
-}
-
-function tabs(data) {
+function createTabs(data) {
   // The extra joins below are required because templates use toString,
   // which joins using a comma by default. This tells it to join using nothing.
   // See https://stackoverflow.com/questions/45812160/unexpected-comma-using-map/45812277
@@ -195,17 +191,21 @@ function tabs(data) {
   return "\n\t\t<section class=\"tab-container\">\n\t\t\t<div class=\"tab-controls\">\n\t\t\t\t".concat(tabControls, "\n\t\t\t</div>\n\t\t\t<div class=\"tab-panels\">\n\t\t\t\t").concat(tabPanels, "\n\t\t\t</div>\n\t\t</section>\n\t");
 }
 
-function demoTabs() {
-  return [{
-    tabname: "Demo tab 1",
-    tabtext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-  }, {
-    tabname: "Potoo tab 2",
-    tabtext: "Potoo ipsum dolor sit amet, consectetur adipiscing elit."
-  }, {
-    tabname: "Puppy tab 3",
-    tabtext: "Puppy ipsum dolor sit amet, consectetur adipiscing elit."
-  }];
+function destroyTabs(tabSet) {
+  var tabs = tabSet.querySelectorAll(".tab-control");
+  var tabsArray = Array.from(tabs);
+  tabsArray.map(function (tab) {
+    tab.removeEventListener("click", switchTabs());
+  });
+  tabSet.remove;
+}
+
+function init() {
+  var tabs = document.querySelectorAll(".tab-control");
+  var tabsArray = Array.from(tabs);
+  tabsArray.map(function (tab) {
+    tab.addEventListener("click", switchTabs);
+  });
 }
 },{}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;

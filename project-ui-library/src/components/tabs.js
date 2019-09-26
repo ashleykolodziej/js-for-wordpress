@@ -11,27 +11,24 @@ function switchTabs() {
 	tabsContainer.querySelector( `.tab-panel-${currentTab}` ).classList.add( `active` );
 }
 
-export function init() {
-	const tabs = document.querySelectorAll( `.tab-control` );
-	const tabsArray = Array.from( tabs );
-
-	tabsArray.map( tab => {
-		tab.addEventListener( `click`, switchTabs );
-	});
+export function demoTabs() {
+	return [
+		{
+			tabname: "Demo tab 1",
+			tabtext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+		},
+		{
+			tabname: "Potoo tab 2",
+			tabtext: "Potoo ipsum dolor sit amet, consectetur adipiscing elit."
+		},
+		{
+			tabname: "Puppy tab 3",
+			tabtext: "Puppy ipsum dolor sit amet, consectetur adipiscing elit."
+		}
+	];
 }
 
-export function destroy( tabObject ) {
-	const tabs = tabObject.querySelectorAll( `.tab-control` );
-	const tabsArray = Array.from( tabs );
-
-	tabsArray.map( tab => {
-		tab.removeEventListener( `click`, switchTabs() );
-	});
-
-	tabObject.remove;
-}
-
-export default function tabs( data ) {
+export default function createTabs( data ) {
 	// The extra joins below are required because templates use toString,
 	// which joins using a comma by default. This tells it to join using nothing.
 	// See https://stackoverflow.com/questions/45812160/unexpected-comma-using-map/45812277
@@ -70,19 +67,22 @@ export default function tabs( data ) {
 	`;
 }
 
-export function demoTabs() {
-  return [
-    {
-      tabname: "Demo tab 1",
-      tabtext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-    },
-    {
-      tabname: "Potoo tab 2",
-      tabtext: "Potoo ipsum dolor sit amet, consectetur adipiscing elit."
-    },
-    {
-      tabname: "Puppy tab 3",
-      tabtext: "Puppy ipsum dolor sit amet, consectetur adipiscing elit."
-    }
-  ];
+export function destroyTabs( tabSet ) {
+	const tabs = tabSet.querySelectorAll( `.tab-control` );
+	const tabsArray = Array.from( tabs );
+
+	tabsArray.map( tab => {
+		tab.removeEventListener( `click`, switchTabs() );
+	});
+
+	tabSet.remove;
+}
+
+export function init() {
+	const tabs = document.querySelectorAll( `.tab-control` );
+	const tabsArray = Array.from( tabs );
+
+	tabsArray.map( tab => {
+		tab.addEventListener( `click`, switchTabs );
+	});
 }

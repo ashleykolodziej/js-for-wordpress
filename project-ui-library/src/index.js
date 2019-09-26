@@ -1,5 +1,5 @@
 import header from "./components/header";
-import tabs from "./components/tabs";
+import createTabs from "./components/tabs";
 import { demoTabs, init as initTabs } from "./components/tabs";
 import "./styles.css";
 
@@ -13,7 +13,7 @@ const UI = {
 UI.render( header( "JS for WordPress Bootcamp UI Library" ) );
 
 UI.render(
-  tabs( demoTabs() )
+  createTabs( demoTabs() )
 );
 
 initTabs();
