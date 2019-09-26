@@ -1,0 +1,17 @@
+.tab-controls {
+	display: flex;
+}
+
+.tab-control.active {
+	background-color: rebeccapurple;
+	color: #fff;
+}
+
+.tab-panel {
+	display: none;
+}
+
+.tab-panel.active {
+	color: rebeccapurple;
+	display: block;
+}
