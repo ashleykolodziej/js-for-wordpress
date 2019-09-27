@@ -140,6 +140,7 @@ exports.default = createTabs;
 exports.destroyTabs = destroyTabs;
 exports.init = init;
 
+// Helper function for switching the tabs
 function switchTabs() {
   var currentTab = this.dataset.tab,
       tabsContainer = this.parentElement.parentElement,
@@ -149,7 +150,8 @@ function switchTabs() {
   });
   this.classList.add("active");
   tabsContainer.querySelector(".tab-panel-".concat(currentTab)).classList.add("active");
-}
+} // Helper function for creating demo data for tabs
+
 
 function demoTabs() {
   return [{
@@ -162,12 +164,14 @@ function demoTabs() {
     tabname: "Puppy tab 3",
     tabtext: "Puppy ipsum dolor sit amet, consectetur adipiscing elit."
   }];
-}
+} // Create a set of tabs
+
 
 function createTabs(data) {
   // The extra joins below are required because templates use toString,
   // which joins using a comma by default. This tells it to join using nothing.
   // See https://stackoverflow.com/questions/45812160/unexpected-comma-using-map/45812277
+  // Builds the tab controls
   var tabControls = data.map(function (tab, index) {
     var tabname = tab.tabname;
     var activeClass = '';
@@ -177,7 +181,8 @@ function createTabs(data) {
     }
 
     return "<button class=\"tab-control-".concat(index, " tab-control ").concat(activeClass, "\" data-tab=\"").concat(index, "\">").concat(tabname, "</button>");
-  }).join('');
+  }).join(''); // Builds the tab panels
+
   var tabPanels = data.map(function (tab, index) {
     var tabtext = tab.tabtext;
     var activeClass = '';
@@ -187,7 +192,8 @@ function createTabs(data) {
     }
 
     return "<div class=\"tab-panel-".concat(index, " tab-panel ").concat(activeClass, "\">").concat(tabtext, "</div>");
-  }).join('');
+  }).join(''); // Return controls, panels, and wrapper markup
+
   return "\n\t\t<section class=\"tab-container\">\n\t\t\t<div class=\"tab-controls\">\n\t\t\t\t".concat(tabControls, "\n\t\t\t</div>\n\t\t\t<div class=\"tab-panels\">\n\t\t\t\t").concat(tabPanels, "\n\t\t\t</div>\n\t\t</section>\n\t");
 }
 
@@ -207,6 +213,99 @@ function init() {
     tab.addEventListener("click", switchTabs);
   });
 }
+},{}],"src/components/form.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.demoForm = demoForm;
+exports.default = createForm;
+
+// Helper function for switching the tabs
+function formAction() {} // Helper function for creating demo data for tabs
+
+
+function demoForm() {
+  return [{
+    label: "Demo Text",
+    name: "name",
+    type: "input"
+  }, {
+    label: "Demo Radio",
+    name: "favorite-food",
+    type: "radio",
+    options: ["Hay", "Carrot", "Cake"]
+  }, {
+    label: "Demo Checkbox",
+    name: "favorite-animal",
+    type: "checkbox",
+    options: ["Bunny", "Kitty", "Puppy"]
+  }];
+} // Create single field
+
+
+function createField(fieldObject) {
+  var fieldIdentifier = fieldObject.name;
+
+  if (fieldObject.id) {
+    fieldIdentifier = fieldObject.id;
+  }
+
+  return "\n\t\t<label class=\"form-field form-field-type-".concat(fieldObject.type, "\">\n\t\t\t<span class=\"form-label\">").concat(fieldObject.label, "</span>\n\t\t\t<input id=\"").concat(fieldIdentifier, "\" type=\"").concat(fieldObject.type, "\" value=\"").concat(fieldIdentifier, "\" name=\"").concat(fieldObject.name, "\" />\n\t\t</label>\n\t");
+} // Create grouped field
+
+
+function createGroupedField(fieldObject) {
+  var groupedFields = '';
+  fieldObject.options.map(function (option) {
+    var optionObject = {
+      label: option,
+      name: fieldObject.name,
+      id: option,
+      type: fieldObject.type
+    };
+    groupedFields += createField(optionObject);
+  });
+  return "\n\t\t<fieldset class=\"form-fieldset form-field-type-".concat(fieldObject.type, "\">\n\t\t\t<legend class=\"form-legend\">").concat(fieldObject.label, "</legend>\n\t\t\t").concat(groupedFields, "\n\t\t</fieldset>\n\t");
+} // Create fields
+// Create a form
+
+
+function createForm(data) {
+  // The extra joins below are required because templates use toString,
+  // which joins using a comma by default. This tells it to join using nothing.
+  // See https://stackoverflow.com/questions/45812160/unexpected-comma-using-map/45812277
+  var tabFields = '';
+  data.map(function (data) {
+    if ("radio" === data.type || "checkbox" === data.type) {
+      tabFields += createGroupedField(data);
+    } else {
+      tabFields += createField(data);
+    }
+  }); // Return controls, panels, and wrapper markup
+
+  return "\n\t\t<form class=\"form-container\">\n\t\t\t".concat(tabFields, "\n\t\t</form>\n\t");
+}
+/*export function destroyForm( form ) {
+	const tabs = tabSet.querySelectorAll( `.tab-control` );
+	const tabsArray = Array.from( tabs );
+
+	tabsArray.map( tab => {
+		tab.removeEventListener( `click`, switchTabs() );
+	});
+
+	tabSet.remove;
+}
+
+export function init() {
+	const tabs = document.querySelectorAll( `.tab-control` );
+	const tabsArray = Array.from( tabs );
+
+	tabsArray.map( tab => {
+		tab.addEventListener( `click`, switchTabs );
+	});
+}*/
 },{}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
@@ -286,6 +385,8 @@ var _header = _interopRequireDefault(require("./components/header"));
 
 var _tabs = _interopRequireWildcard(require("./components/tabs"));
 
+var _form = _interopRequireWildcard(require("./components/form"));
+
 require("./styles.css");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -303,8 +404,9 @@ var UI = {
 };
 UI.render((0, _header.default)("JS for WordPress Bootcamp UI Library"));
 UI.render((0, _tabs.default)((0, _tabs.demoTabs)()));
+UI.render((0, _form.default)((0, _form.demoForm)()));
 (0, _tabs.init)();
-},{"./components/header":"src/components/header.js","./components/tabs":"src/components/tabs.js","./styles.css":"src/styles.css"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./components/header":"src/components/header.js","./components/tabs":"src/components/tabs.js","./components/form":"src/components/form.js","./styles.css":"src/styles.css"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -332,7 +434,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62940" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62112" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
