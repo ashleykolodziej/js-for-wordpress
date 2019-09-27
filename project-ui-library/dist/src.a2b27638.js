@@ -297,7 +297,7 @@ function createForm(data) {
 function destroyForm(form) {
   var submit = form.querySelector(".form-submit");
   submit.removeEventListener("click", submitToConsole);
-  tabSet.remove;
+  form.remove;
 }
 
 function init() {

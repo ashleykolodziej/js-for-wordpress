@@ -116,7 +116,7 @@ export function destroyForm( form ) {
 
 	submit.removeEventListener( `click`, submitToConsole );
 
-	tabSet.remove;
+	form.remove;
 }
 
 export function init() {
