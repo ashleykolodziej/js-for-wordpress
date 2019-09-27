@@ -201,7 +201,7 @@ function destroyTabs(tabSet) {
   var tabs = tabSet.querySelectorAll(".tab-control");
   var tabsArray = Array.from(tabs);
   tabsArray.map(function (tab) {
-    tab.removeEventListener("click", switchTabs());
+    tab.removeEventListener("click", switchTabs);
   });
   tabSet.remove;
 }
@@ -221,9 +221,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.demoForm = demoForm;
 exports.default = createForm;
+exports.destroyForm = destroyForm;
+exports.init = init;
 
 // Helper function for switching the tabs
-function formAction() {} // Helper function for creating demo data for tabs
+function submitToConsole(e) {
+  e.preventDefault();
+  var currentForm = this.parentElement,
+      currentFormFields = Array.from(currentForm.querySelectorAll(".form-field"));
+  currentFormFields.map(function (field) {
+    console.log(field);
+  });
+} // Helper function for creating demo data for tabs
 
 
 function demoForm() {
@@ -252,7 +261,7 @@ function createField(fieldObject) {
     fieldIdentifier = fieldObject.id;
   }
 
-  return "\n\t\t<label class=\"form-field form-field-type-".concat(fieldObject.type, "\">\n\t\t\t<span class=\"form-label\">").concat(fieldObject.label, "</span>\n\t\t\t<input id=\"").concat(fieldIdentifier, "\" type=\"").concat(fieldObject.type, "\" value=\"").concat(fieldIdentifier, "\" name=\"").concat(fieldObject.name, "\" />\n\t\t</label>\n\t");
+  return "\n\t\t<label class=\"form-field form-field-type-".concat(fieldObject.type, "\">\n\t\t\t<span class=\"form-label\">").concat(fieldObject.label, "</span>\n\t\t\t<input class=\"form-input\" id=\"").concat(fieldIdentifier, "\" type=\"").concat(fieldObject.type, "\" value=\"").concat(fieldIdentifier, "\" name=\"").concat(fieldObject.name, "\" />\n\t\t</label>\n\t");
 } // Create grouped field
 
 
@@ -276,36 +285,31 @@ function createForm(data) {
   // The extra joins below are required because templates use toString,
   // which joins using a comma by default. This tells it to join using nothing.
   // See https://stackoverflow.com/questions/45812160/unexpected-comma-using-map/45812277
-  var tabFields = '';
+  var formFields = '';
   data.map(function (data) {
     if ("radio" === data.type || "checkbox" === data.type) {
-      tabFields += createGroupedField(data);
+      formFields += createGroupedField(data);
     } else {
-      tabFields += createField(data);
+      formFields += createField(data);
     }
   }); // Return controls, panels, and wrapper markup
 
-  return "\n\t\t<form class=\"form-container\">\n\t\t\t".concat(tabFields, "\n\t\t</form>\n\t");
-}
-/*export function destroyForm( form ) {
-	const tabs = tabSet.querySelectorAll( `.tab-control` );
-	const tabsArray = Array.from( tabs );
-
-	tabsArray.map( tab => {
-		tab.removeEventListener( `click`, switchTabs() );
-	});
-
-	tabSet.remove;
+  return "\n\t\t<form class=\"form-container\">\n\t\t\t".concat(formFields, "\n\t\t\t<input class=\"form-submit\" type=\"submit\" value=\"Submit\" />\n\t\t</form>\n\t");
 }
 
-export function init() {
-	const tabs = document.querySelectorAll( `.tab-control` );
-	const tabsArray = Array.from( tabs );
+function destroyForm(form) {
+  var submit = form.querySelector(".form-submit");
+  submit.removeEventListener("click", submitToConsole);
+  tabSet.remove;
+}
 
-	tabsArray.map( tab => {
-		tab.addEventListener( `click`, switchTabs );
-	});
-}*/
+function init() {
+  var submitButtons = document.querySelectorAll(".form-submit");
+  var submitButtonsArray = Array.from(submitButtons);
+  submitButtonsArray.map(function (button) {
+    button.addEventListener("click", submitToConsole);
+  });
+}
 },{}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
@@ -403,9 +407,12 @@ var UI = {
   }
 };
 UI.render((0, _header.default)("JS for WordPress Bootcamp UI Library"));
+UI.render("<h2>Tabs</h2>");
 UI.render((0, _tabs.default)((0, _tabs.demoTabs)()));
+UI.render("<h2>Forms</h2>");
 UI.render((0, _form.default)((0, _form.demoForm)()));
 (0, _tabs.init)();
+(0, _form.init)();
 },{"./components/header":"src/components/header.js","./components/tabs":"src/components/tabs.js","./components/form":"src/components/form.js","./styles.css":"src/styles.css"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

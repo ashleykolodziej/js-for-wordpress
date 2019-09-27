@@ -1,7 +1,14 @@
 // Helper function for switching the tabs
 
-function formAction() {
+function submitToConsole( e ) {
+	e.preventDefault();
 
+	const currentForm = this.parentElement,
+			currentFormFields = Array.from( currentForm.querySelectorAll( `.form-field` ) );
+
+	currentFormFields.map( field => {
+		console.log(field);
+	} );
 }
 
 // Helper function for creating demo data for tabs
@@ -48,7 +55,7 @@ function createField( fieldObject ) {
 	return `
 		<label class="form-field form-field-type-${fieldObject.type}">
 			<span class="form-label">${fieldObject.label}</span>
-			<input id="${fieldIdentifier}" type="${fieldObject.type}" value="${fieldIdentifier}" name="${fieldObject.name}" />
+			<input class="form-input" id="${fieldIdentifier}" type="${fieldObject.type}" value="${fieldIdentifier}" name="${fieldObject.name}" />
 		</label>
 	`;
 }
@@ -87,41 +94,39 @@ export default function createForm( data ) {
 	// which joins using a comma by default. This tells it to join using nothing.
 	// See https://stackoverflow.com/questions/45812160/unexpected-comma-using-map/45812277
 
-	let tabFields = '';
+	let formFields = '';
 
 	data.map( data => {
 
 		if ( "radio" === data.type || "checkbox" === data.type ) {
-			tabFields += createGroupedField( data );
+			formFields += createGroupedField( data );
 		} else {
-			tabFields += createField( data );
+			formFields += createField( data );
 		}
 	} );
 
 	// Return controls, panels, and wrapper markup
 	return `
 		<form class="form-container">
-			${tabFields}
+			${formFields}
+			<input class="form-submit" type="submit" value="Submit" />
 		</form>
 	`;
 }
 
-/*export function destroyForm( form ) {
-	const tabs = tabSet.querySelectorAll( `.tab-control` );
-	const tabsArray = Array.from( tabs );
+export function destroyForm( form ) {
+	const submit = form.querySelector( `.form-submit` );
 
-	tabsArray.map( tab => {
-		tab.removeEventListener( `click`, switchTabs() );
-	});
+	submit.removeEventListener( `click`, submitToConsole );
 
 	tabSet.remove;
 }
 
 export function init() {
-	const tabs = document.querySelectorAll( `.tab-control` );
-	const tabsArray = Array.from( tabs );
+	const submitButtons = document.querySelectorAll( `.form-submit` );
+	const submitButtonsArray = Array.from( submitButtons );
 
-	tabsArray.map( tab => {
-		tab.addEventListener( `click`, switchTabs );
+	submitButtonsArray.map( button => {
+		button.addEventListener( `click`, submitToConsole );
 	});
-}*/
+}

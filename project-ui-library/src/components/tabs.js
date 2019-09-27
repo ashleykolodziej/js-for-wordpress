@@ -81,7 +81,7 @@ export function destroyTabs( tabSet ) {
 	const tabsArray = Array.from( tabs );
 
 	tabsArray.map( tab => {
-		tab.removeEventListener( `click`, switchTabs() );
+		tab.removeEventListener( `click`, switchTabs );
 	});
 
 	tabSet.remove;
