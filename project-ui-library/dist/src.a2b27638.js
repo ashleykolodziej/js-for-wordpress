@@ -282,9 +282,6 @@ function createGroupedField(fieldObject) {
 
 
 function createForm(data) {
-  // The extra joins below are required because templates use toString,
-  // which joins using a comma by default. This tells it to join using nothing.
-  // See https://stackoverflow.com/questions/45812160/unexpected-comma-using-map/45812277
   var formFields = '';
   data.map(function (data) {
     if ("radio" === data.type || "checkbox" === data.type) {
