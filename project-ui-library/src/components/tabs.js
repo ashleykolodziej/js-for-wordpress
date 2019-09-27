@@ -1,3 +1,5 @@
+// Helper function for switching the tabs
+
 function switchTabs() {
 	const currentTab = this.dataset.tab,
 			tabsContainer = this.parentElement.parentElement,
@@ -10,6 +12,8 @@ function switchTabs() {
 	this.classList.add( `active` );
 	tabsContainer.querySelector( `.tab-panel-${currentTab}` ).classList.add( `active` );
 }
+
+// Helper function for creating demo data for tabs
 
 export function demoTabs() {
 	return [
@@ -28,11 +32,14 @@ export function demoTabs() {
 	];
 }
 
+// Create a set of tabs
+
 export default function createTabs( data ) {
 	// The extra joins below are required because templates use toString,
 	// which joins using a comma by default. This tells it to join using nothing.
 	// See https://stackoverflow.com/questions/45812160/unexpected-comma-using-map/45812277
 
+	// Builds the tab controls
 	const tabControls = data.map( ( tab, index ) => {
 		const tabname = tab.tabname;
 		let activeClass = '';
@@ -44,6 +51,7 @@ export default function createTabs( data ) {
 		return `<button class="tab-control-${index} tab-control ${activeClass}" data-tab="${index}">${tabname}</button>`;
 	} ).join( '' );
 
+	// Builds the tab panels
 	const tabPanels = data.map( ( tab, index ) => {
 		const tabtext = tab.tabtext;
 		let activeClass = '';
@@ -55,6 +63,7 @@ export default function createTabs( data ) {
 		return  `<div class="tab-panel-${index} tab-panel ${activeClass}">${tabtext}</div>`;
 	} ).join( '' );
 
+	// Return controls, panels, and wrapper markup
 	return `
 		<section class="tab-container">
 			<div class="tab-controls">
