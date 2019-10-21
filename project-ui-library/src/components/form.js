@@ -1,3 +1,5 @@
+'use strict';
+
 // Helper function for switching the tabs
 
 function submitToConsole( e ) {

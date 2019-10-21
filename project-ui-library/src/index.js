@@ -1,3 +1,5 @@
+'use strict';
+
 import header from "./components/header";
 import createTabs from "./components/tabs";
 import { demoTabs, init as initTabs } from "./components/tabs";
