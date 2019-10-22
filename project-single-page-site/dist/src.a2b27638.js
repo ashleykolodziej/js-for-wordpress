@@ -6898,6 +6898,7 @@ var WPAPI = require('wpapi');
 var wp = new WPAPI({
   endpoint: 'http://bun.cms-devl.bu.edu/responsi/wp-json'
 });
+var container = document.querySelector("#app");
 var siteData = wp.root().get(function (error, data) {
   if (error) {
     console.log("Error retrieving site data: ".concat(error));
@@ -6906,14 +6907,21 @@ var siteData = wp.root().get(function (error, data) {
   return data;
 });
 
+function createSiteInfo(data) {
+  // TODO: Only output tags if not blank
+  var content = "\n\t\t<h1>".concat(data.name, "</h1>\n\t\t<p>").concat(data.description, "</p>\n\t");
+  container.insertAdjacentHTML('beforeend', content);
+  return;
+}
+
+function createNavigation() {
+  var content = "\n\t\t<nav>\n\t\t\t<a href=\"#\">Blog</a>\n\t\t\t<a href=\"#\">Users</a>\n\t\t</nav>\n\t";
+  container.insertAdjacentHTML('beforeend', content);
+  return;
+}
+
 function header() {
-  Promise.resolve(siteData).then(function (data) {
-    // TODO: Only output tags if not blank
-    var content = "\n\t\t\t<h1>".concat(data.name, "</h1>\n\t\t\t<p>").concat(data.description, "</p>\n\t\t");
-    var container = document.querySelector("#app");
-    container.insertAdjacentHTML('beforeend', content);
-    return;
-  });
+  Promise.resolve(siteData).then(createSiteInfo).then(createNavigation);
 }
 },{"wpapi":"node_modules/wpapi/wpapi.js"}],"src/components/posts.js":[function(require,module,exports) {
 'use strict';
@@ -6928,24 +6936,61 @@ var WPAPI = require('wpapi');
 var wp = new WPAPI({
   endpoint: 'http://bun.cms-devl.bu.edu/responsi/wp-json'
 });
-wp.posts().get(function (err, data) {
-  if (err) {// handle err
+var container = document.querySelector("#app");
+var postsData = wp.posts().get(function (error, data) {
+  if (error) {
+    console.log("Error retrieving posts data: ".concat(error));
   }
 
+  return data;
+});
+
+function buildPosts(data) {
   data.map(function (post) {
-    document.querySelector("#app").insertAdjacentHTML("beforeend", "<h3>".concat(post.title.rendered, "</h3>"));
+    console.log(post);
+    var content = "\n\t\t\t<h2>".concat(post.title.rendered, "</h2>\n\t\t\t<p>").concat(post.excerpt.rendered, "</p>\n\t\t");
+    container.insertAdjacentHTML('beforeend', content);
+    return;
   });
-});
-wp.root().get(function (err, data) {
-  if (err) {// handle err
-  }
-
-  console.log(data);
-});
+}
 
 function posts() {
-  //console.log(pageData);
-  //console.log(pages);
+  Promise.resolve(postsData).then(buildPosts);
+  return;
+}
+},{"wpapi":"node_modules/wpapi/wpapi.js"}],"src/components/users.js":[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = users;
+
+var WPAPI = require('wpapi');
+
+var wp = new WPAPI({
+  endpoint: 'http://bun.cms-devl.bu.edu/responsi/wp-json'
+});
+var container = document.querySelector("#app");
+var userData = wp.users().get(function (error, data) {
+  if (error) {
+    console.log("Error retrieving posts data: ".concat(error));
+  }
+
+  return data;
+});
+
+function listAuthors(data) {
+  data.map(function (user) {
+    console.log(user);
+    var content = "\n\t\t\t<h2>".concat(user.name, "</h2>\n\t\t");
+    container.insertAdjacentHTML('beforeend', content);
+    return;
+  });
+}
+
+function users() {
+  Promise.resolve(userData).then(listAuthors);
   return;
 }
 },{"wpapi":"node_modules/wpapi/wpapi.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
@@ -7027,12 +7072,12 @@ var _header = _interopRequireDefault(require("./components/header"));
 
 var _posts = _interopRequireDefault(require("./components/posts"));
 
+var _users = _interopRequireDefault(require("./components/users"));
+
 require("./styles.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Pull in the site title
-// Create a menu of pages (can be hardcoded or use the WP REST API Menus Plugin)
 // Create a blog listing page and single pages
 // Create a user page that lists users and shows their blog posts
 // Use event handlers instead of page refreshes for loading content
@@ -7042,9 +7087,13 @@ var UI = {
     var container = document.querySelector("#app");
     container.insertAdjacentHTML(where, content);
   }
-};
+}; // Pull in the site title and description
+// Create a menu of pages (can be hardcoded or use the WP REST API Menus Plugin)
+
 (0, _header.default)();
-},{"./components/header":"src/components/header.js","./components/posts":"src/components/posts.js","./styles.css":"src/styles.css"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+(0, _posts.default)();
+(0, _users.default)();
+},{"./components/header":"src/components/header.js","./components/posts":"src/components/posts.js","./components/users":"src/components/users.js","./styles.css":"src/styles.css"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

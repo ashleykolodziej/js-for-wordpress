@@ -8,6 +8,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "components": "^0.1.0",
+    "navigation": "^5.2.0",
     "wpapi": "^1.2.1"
   },
   "devDependencies": {
