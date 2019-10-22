@@ -7019,7 +7019,7 @@ exports.postsData = postsData;
 
 function buildPosts(data) {
   data.map(function (post) {
-    var content = "\n\t\t\t<h2>".concat(post.title.rendered, "</h2>\n\t\t\t<p>").concat(post.excerpt.rendered, "</p>\n\t\t");
+    var content = "\n\t\t\t<h2>".concat(post.title.rendered, "</h2>\n\t\t\t<p>").concat(post.excerpt.rendered, "</p>\n\t\t\t<a data-id=\"").concat(post.id, "\" class=\"button js-post-detail\" href=\"#\">Read more</a>\n\t\t");
 
     _settings.container.insertAdjacentHTML('beforeend', content);
 
@@ -7027,8 +7027,25 @@ function buildPosts(data) {
   });
 }
 
+function createSingleView(e) {
+  e.preventDefault();
+  console.log(this);
+  var postID = this.getAttribute("data-id");
+  postsData.find(function (value, index) {
+    console.log("Value is ".concat(value));
+    console.log("Index is ".concat(value));
+  });
+}
+
+function attachPostEvents() {
+  var postLinks = Array.from(document.querySelectorAll(".js-post-detail"));
+  postLinks.map(function (link) {
+    link.addEventListener('click', createSingleView);
+  });
+}
+
 function posts() {
-  Promise.resolve(postsData).then(buildPosts);
+  Promise.resolve(postsData).then(buildPosts).then(attachPostEvents);
   return;
 }
 },{"./settings":"src/components/settings.js","./users":"src/components/users.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
