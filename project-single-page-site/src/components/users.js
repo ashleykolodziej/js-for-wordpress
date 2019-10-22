@@ -47,8 +47,7 @@ function listAuthors( data ) {
 
 export default function users() {
 	Promise.resolve( userData )
-		.then( listAuthors )
-		.then( getPostsByAuthor );
+		.then( listAuthors );
 	return;
 }
 

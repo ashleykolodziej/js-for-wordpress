@@ -6991,7 +6991,7 @@ function listAuthors(data) {
 }
 
 function users() {
-  Promise.resolve(userData).then(listAuthors).then(getPostsByAuthor);
+  Promise.resolve(userData).then(listAuthors);
   return;
 }
 },{"./settings":"src/components/settings.js","./posts":"src/components/posts.js"}],"src/components/posts.js":[function(require,module,exports) {
