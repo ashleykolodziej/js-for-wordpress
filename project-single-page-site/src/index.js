@@ -17,4 +17,4 @@ const UI = {
   }
 };
 
-UI.render( header( "JS for WordPress Single Page Site" ) );
+header();

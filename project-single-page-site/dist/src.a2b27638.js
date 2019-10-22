@@ -117,19 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/components/header.js":[function(require,module,exports) {
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = header;
-
-function header(text) {
-  var tag = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "h2";
-  return "<".concat(tag, ">").concat(text, "</").concat(tag, ">");
-}
-},{}],"node_modules/wpapi/lib/util/object-reduce.js":[function(require,module,exports) {
+})({"node_modules/wpapi/lib/util/object-reduce.js":[function(require,module,exports) {
 'use strict';
 /**
  * Utility method to permit Array#reduce-like operations over objects
@@ -6897,7 +6885,37 @@ WPAPI.discover = url => {
 };
 
 module.exports = WPAPI;
-},{"./lib/util/object-reduce":"node_modules/wpapi/lib/util/object-reduce.js","./lib/data/default-routes.json":"node_modules/wpapi/lib/data/default-routes.json","./lib/route-tree":"node_modules/wpapi/lib/route-tree.js","./lib/endpoint-factories":"node_modules/wpapi/lib/endpoint-factories.js","./lib/autodiscovery":"node_modules/wpapi/lib/autodiscovery.js","./lib/constructors/wp-request":"node_modules/wpapi/lib/constructors/wp-request.js","./lib/http-transport":"node_modules/wpapi/lib/http-transport.js","./lib/wp-register-route":"node_modules/wpapi/lib/wp-register-route.js"}],"src/components/posts.js":[function(require,module,exports) {
+},{"./lib/util/object-reduce":"node_modules/wpapi/lib/util/object-reduce.js","./lib/data/default-routes.json":"node_modules/wpapi/lib/data/default-routes.json","./lib/route-tree":"node_modules/wpapi/lib/route-tree.js","./lib/endpoint-factories":"node_modules/wpapi/lib/endpoint-factories.js","./lib/autodiscovery":"node_modules/wpapi/lib/autodiscovery.js","./lib/constructors/wp-request":"node_modules/wpapi/lib/constructors/wp-request.js","./lib/http-transport":"node_modules/wpapi/lib/http-transport.js","./lib/wp-register-route":"node_modules/wpapi/lib/wp-register-route.js"}],"src/components/header.js":[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = header;
+
+var WPAPI = require('wpapi');
+
+var wp = new WPAPI({
+  endpoint: 'http://bun.cms-devl.bu.edu/responsi/wp-json'
+});
+var siteData = wp.root().get(function (error, data) {
+  if (error) {
+    console.log("Error retrieving site data: ".concat(error));
+  }
+
+  return data;
+});
+
+function header() {
+  Promise.resolve(siteData).then(function (data) {
+    // TODO: Only output tags if not blank
+    var content = "\n\t\t\t<h1>".concat(data.name, "</h1>\n\t\t\t<p>").concat(data.description, "</p>\n\t\t");
+    var container = document.querySelector("#app");
+    container.insertAdjacentHTML('beforeend', content);
+    return;
+  });
+}
+},{"wpapi":"node_modules/wpapi/wpapi.js"}],"src/components/posts.js":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6917,6 +6935,12 @@ wp.posts().get(function (err, data) {
   data.map(function (post) {
     document.querySelector("#app").insertAdjacentHTML("beforeend", "<h3>".concat(post.title.rendered, "</h3>"));
   });
+});
+wp.root().get(function (err, data) {
+  if (err) {// handle err
+  }
+
+  console.log(data);
 });
 
 function posts() {
@@ -7019,7 +7043,7 @@ var UI = {
     container.insertAdjacentHTML(where, content);
   }
 };
-UI.render((0, _header.default)("JS for WordPress Single Page Site"));
+(0, _header.default)();
 },{"./components/header":"src/components/header.js","./components/posts":"src/components/posts.js","./styles.css":"src/styles.css"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -7048,7 +7072,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60784" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51065" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

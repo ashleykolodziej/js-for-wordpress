@@ -12,6 +12,13 @@ wp.posts().get(function( err, data ) {
     } );
 });
 
+wp.root().get(function ( err, data ) {
+	if ( err ) {
+        // handle err
+    }
+    console.log(data);
+});
+
 export default function posts() {
   //console.log(pageData);
   //console.log(pages);
