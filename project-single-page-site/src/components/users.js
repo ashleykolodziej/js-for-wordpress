@@ -1,8 +1,6 @@
 'use strict';
 
-const WPAPI = require( 'wpapi' );
-const wp = new WPAPI({ endpoint: 'http://bun.cms-devl.bu.edu/responsi/wp-json' });
-const container = document.querySelector( "#app" );
+import { wp, container } from './settings';
 
 const userData = wp.users().get(function( error, data ) {
 	if ( error ) {
@@ -31,3 +29,5 @@ export default function users() {
 		.then( listAuthors );
 	return;
 }
+
+export { userData };

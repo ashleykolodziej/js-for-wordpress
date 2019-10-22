@@ -6885,7 +6885,23 @@ WPAPI.discover = url => {
 };
 
 module.exports = WPAPI;
-},{"./lib/util/object-reduce":"node_modules/wpapi/lib/util/object-reduce.js","./lib/data/default-routes.json":"node_modules/wpapi/lib/data/default-routes.json","./lib/route-tree":"node_modules/wpapi/lib/route-tree.js","./lib/endpoint-factories":"node_modules/wpapi/lib/endpoint-factories.js","./lib/autodiscovery":"node_modules/wpapi/lib/autodiscovery.js","./lib/constructors/wp-request":"node_modules/wpapi/lib/constructors/wp-request.js","./lib/http-transport":"node_modules/wpapi/lib/http-transport.js","./lib/wp-register-route":"node_modules/wpapi/lib/wp-register-route.js"}],"src/components/header.js":[function(require,module,exports) {
+},{"./lib/util/object-reduce":"node_modules/wpapi/lib/util/object-reduce.js","./lib/data/default-routes.json":"node_modules/wpapi/lib/data/default-routes.json","./lib/route-tree":"node_modules/wpapi/lib/route-tree.js","./lib/endpoint-factories":"node_modules/wpapi/lib/endpoint-factories.js","./lib/autodiscovery":"node_modules/wpapi/lib/autodiscovery.js","./lib/constructors/wp-request":"node_modules/wpapi/lib/constructors/wp-request.js","./lib/http-transport":"node_modules/wpapi/lib/http-transport.js","./lib/wp-register-route":"node_modules/wpapi/lib/wp-register-route.js"}],"src/components/settings.js":[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.container = exports.wp = void 0;
+
+var WPAPI = require('wpapi');
+
+var wp = new WPAPI({
+  endpoint: 'http://bun.cms-devl.bu.edu/responsi/wp-json'
+});
+exports.wp = wp;
+var container = document.querySelector("#app");
+exports.container = container;
+},{"wpapi":"node_modules/wpapi/wpapi.js"}],"src/components/header.js":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6893,13 +6909,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = header;
 
-var WPAPI = require('wpapi');
+var _settings = require("./settings");
 
-var wp = new WPAPI({
-  endpoint: 'http://bun.cms-devl.bu.edu/responsi/wp-json'
-});
-var container = document.querySelector("#app");
-var siteData = wp.root().get(function (error, data) {
+var siteData = _settings.wp.root().get(function (error, data) {
   if (error) {
     console.log("Error retrieving site data: ".concat(error));
   }
@@ -6910,20 +6922,60 @@ var siteData = wp.root().get(function (error, data) {
 function createSiteInfo(data) {
   // TODO: Only output tags if not blank
   var content = "\n\t\t<h1>".concat(data.name, "</h1>\n\t\t<p>").concat(data.description, "</p>\n\t");
-  container.insertAdjacentHTML('beforeend', content);
+
+  _settings.container.insertAdjacentHTML('beforeend', content);
+
   return;
 }
 
 function createNavigation() {
   var content = "\n\t\t<nav>\n\t\t\t<a href=\"#\">Blog</a>\n\t\t\t<a href=\"#\">Users</a>\n\t\t</nav>\n\t";
-  container.insertAdjacentHTML('beforeend', content);
+
+  _settings.container.insertAdjacentHTML('beforeend', content);
+
   return;
 }
 
 function header() {
   Promise.resolve(siteData).then(createSiteInfo).then(createNavigation);
 }
-},{"wpapi":"node_modules/wpapi/wpapi.js"}],"src/components/posts.js":[function(require,module,exports) {
+},{"./settings":"src/components/settings.js"}],"src/components/users.js":[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = users;
+exports.userData = void 0;
+
+var _settings = require("./settings");
+
+var userData = _settings.wp.users().get(function (error, data) {
+  if (error) {
+    console.log("Error retrieving posts data: ".concat(error));
+  }
+
+  return data;
+});
+
+exports.userData = userData;
+
+function listAuthors(data) {
+  data.map(function (user) {
+    console.log(user);
+    var content = "\n\t\t\t<h2>".concat(user.name, "</h2>\n\t\t");
+
+    _settings.container.insertAdjacentHTML('beforeend', content);
+
+    return;
+  });
+}
+
+function users() {
+  Promise.resolve(userData).then(listAuthors);
+  return;
+}
+},{"./settings":"src/components/settings.js"}],"src/components/posts.js":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6931,13 +6983,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = posts;
 
-var WPAPI = require('wpapi');
+var _settings = require("./settings");
 
-var wp = new WPAPI({
-  endpoint: 'http://bun.cms-devl.bu.edu/responsi/wp-json'
-});
-var container = document.querySelector("#app");
-var postsData = wp.posts().get(function (error, data) {
+var _users = require("./users");
+
+var postsData = _settings.wp.posts().get(function (error, data) {
   if (error) {
     console.log("Error retrieving posts data: ".concat(error));
   }
@@ -6949,7 +6999,9 @@ function buildPosts(data) {
   data.map(function (post) {
     console.log(post);
     var content = "\n\t\t\t<h2>".concat(post.title.rendered, "</h2>\n\t\t\t<p>").concat(post.excerpt.rendered, "</p>\n\t\t");
-    container.insertAdjacentHTML('beforeend', content);
+
+    _settings.container.insertAdjacentHTML('beforeend', content);
+
     return;
   });
 }
@@ -6958,42 +7010,7 @@ function posts() {
   Promise.resolve(postsData).then(buildPosts);
   return;
 }
-},{"wpapi":"node_modules/wpapi/wpapi.js"}],"src/components/users.js":[function(require,module,exports) {
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = users;
-
-var WPAPI = require('wpapi');
-
-var wp = new WPAPI({
-  endpoint: 'http://bun.cms-devl.bu.edu/responsi/wp-json'
-});
-var container = document.querySelector("#app");
-var userData = wp.users().get(function (error, data) {
-  if (error) {
-    console.log("Error retrieving posts data: ".concat(error));
-  }
-
-  return data;
-});
-
-function listAuthors(data) {
-  data.map(function (user) {
-    console.log(user);
-    var content = "\n\t\t\t<h2>".concat(user.name, "</h2>\n\t\t");
-    container.insertAdjacentHTML('beforeend', content);
-    return;
-  });
-}
-
-function users() {
-  Promise.resolve(userData).then(listAuthors);
-  return;
-}
-},{"wpapi":"node_modules/wpapi/wpapi.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"./settings":"src/components/settings.js","./users":"src/components/users.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
