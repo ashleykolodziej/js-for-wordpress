@@ -6950,6 +6950,8 @@ exports.userData = void 0;
 
 var _settings = require("./settings");
 
+var _posts = require("./posts");
+
 var userData = _settings.wp.users().get(function (error, data) {
   if (error) {
     console.log("Error retrieving posts data: ".concat(error));
@@ -6960,28 +6962,46 @@ var userData = _settings.wp.users().get(function (error, data) {
 
 exports.userData = userData;
 
+function getPostsByAuthor(author) {
+  var posts = _settings.wp.posts().author(author).get(function (error, data) {
+    if (error) {
+      console.log("Error retrieving posts data: ".concat(error));
+    }
+
+    return data;
+  });
+
+  return posts;
+}
+
 function listAuthors(data) {
   data.map(function (user) {
-    console.log(user);
-    var content = "\n\t\t\t<h2>".concat(user.name, "</h2>\n\t\t");
+    var postsByAuthor = getPostsByAuthor(user.id);
+    var content = "\n\t\t\t<h2>".concat(user.name, "</h2>\n\t\t\t<ul>\n\t\t");
+    Promise.resolve(postsByAuthor).then(function (data) {
+      data.map(function (post) {
+        content += "<li><a href=\"#\">".concat(post.title.rendered, "</a></li>");
+      });
+    }).then(function () {
+      content += "</ul>";
 
-    _settings.container.insertAdjacentHTML('beforeend', content);
-
-    return;
+      _settings.container.insertAdjacentHTML('beforeend', content);
+    });
   });
 }
 
 function users() {
-  Promise.resolve(userData).then(listAuthors);
+  Promise.resolve(userData).then(listAuthors).then(getPostsByAuthor);
   return;
 }
-},{"./settings":"src/components/settings.js"}],"src/components/posts.js":[function(require,module,exports) {
+},{"./settings":"src/components/settings.js","./posts":"src/components/posts.js"}],"src/components/posts.js":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = posts;
+exports.postsData = void 0;
 
 var _settings = require("./settings");
 
@@ -6995,9 +7015,10 @@ var postsData = _settings.wp.posts().get(function (error, data) {
   return data;
 });
 
+exports.postsData = postsData;
+
 function buildPosts(data) {
   data.map(function (post) {
-    console.log(post);
     var content = "\n\t\t\t<h2>".concat(post.title.rendered, "</h2>\n\t\t\t<p>").concat(post.excerpt.rendered, "</p>\n\t\t");
 
     _settings.container.insertAdjacentHTML('beforeend', content);

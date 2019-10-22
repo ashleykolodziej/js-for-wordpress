@@ -13,7 +13,6 @@ const postsData = wp.posts().get(function( error, data ) {
 
 function buildPosts( data ) {
 	data.map( function ( post ) {
-		console.log(post);
 		const content = `
 			<h2>${post.title.rendered}</h2>
 			<p>${post.excerpt.rendered}</p>
@@ -30,3 +29,5 @@ export default function posts() {
 		.then( buildPosts );
 	return;
 }
+
+export { postsData };
