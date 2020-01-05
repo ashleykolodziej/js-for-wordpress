@@ -7048,7 +7048,68 @@ function posts() {
   Promise.resolve(postsData).then(buildPosts).then(attachPostEvents);
   return;
 }
-},{"./settings":"src/components/settings.js","./users":"src/components/users.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"./settings":"src/components/settings.js","./users":"src/components/users.js"}],"src/components/nutrition.js":[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = nutrition;
+
+var _settings = require("./settings");
+
+var _posts = require("./posts");
+
+function listNutrition(data) {
+  console.log(data);
+  var foodsArray = Array.from(data.foods);
+  var totalCals = 0;
+  console.log(foodsArray);
+  foodsArray.map(function (food) {
+    console.log(food);
+    var content = "\n\t\t\t<img src=\"".concat(food.photo.thumb, "\" />\n\t\t\t<h2>").concat(food.food_name, "</h2>\n\t\t\t<p>Calories: ").concat(food.nf_calories, " kcals</p>\n\t\t");
+    totalCals += food.nf_calories;
+
+    _settings.container.insertAdjacentHTML('beforeend', content);
+
+    return;
+  });
+
+  _settings.container.insertAdjacentHTML('beforeend', "Total Calories: ".concat(totalCals));
+}
+
+var query = {
+  "query": "1 cup spinach two cups flour five tortillas",
+  "num_servings": 4
+};
+var options = {
+  method: 'POST',
+  body: JSON.stringify(query),
+  headers: {
+    'Content-Type': 'application/json',
+    'x-app-id': '5e4cca08',
+    'x-app-key': '73f342cf2c1b8b19a42e3ba12ce9e420',
+    "x-remote-user-id": "0",
+    "cache-control": "no-cache"
+  }
+};
+
+function getNutritionData(url, options) {
+  return fetch(url, options).then(function (response) {
+    return response.json();
+  });
+}
+
+function nutrition() {
+  getNutritionData('https://trackapi.nutritionix.com/v2/natural/nutrients', options).then(function (result) {
+    return listNutrition(result);
+  }).catch(function (error) {
+    return console.log('error: ', error);
+  }); //.then( response => listNutrition);
+
+  return;
+}
+},{"./settings":"src/components/settings.js","./posts":"src/components/posts.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -7129,6 +7190,8 @@ var _posts = _interopRequireDefault(require("./components/posts"));
 
 var _users = _interopRequireDefault(require("./components/users"));
 
+var _nutrition = _interopRequireDefault(require("./components/nutrition"));
+
 require("./styles.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -7145,10 +7208,35 @@ var UI = {
 }; // Pull in the site title and description
 // Create a menu of pages (can be hardcoded or use the WP REST API Menus Plugin)
 
-(0, _header.default)();
-(0, _posts.default)();
-(0, _users.default)();
-},{"./components/header":"src/components/header.js","./components/posts":"src/components/posts.js","./components/users":"src/components/users.js","./styles.css":"src/styles.css"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+(0, _header.default)(); //posts();
+//users();
+
+(0, _nutrition.default)(); // Application ID
+// 5e4cca08
+// Application key
+// 73f342cf2c1b8b19a42e3ba12ce9e420
+
+/*
+https://trackapi.nutritionix.com/v2/search/instant?query=apple?x-app-id=5e4cca08&x-app-key=73f342cf2c1b8b19a42e3ba12ce9e420
+
+axios.get('https://trackapi.nutritionix.com/v2/search/instant?query=apple', {
+ headers: {
+   'x-app-id': 'your id',
+   'x-app-key': 'your key',
+ },
+ ...
+});
+
+axios.get('https://trackapi.nutritionix.com/v2/natural/nutrients?query=apple', {
+ headers: {
+   'x-app-id': 'your id',
+   'x-app-key': 'your key',
+ },
+ ...
+});
+
+*/
+},{"./components/header":"src/components/header.js","./components/posts":"src/components/posts.js","./components/users":"src/components/users.js","./components/nutrition":"src/components/nutrition.js","./styles.css":"src/styles.css"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -7176,7 +7264,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51065" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61468" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
